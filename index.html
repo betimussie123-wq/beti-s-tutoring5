@@ -322,6 +322,98 @@
         <p class="mb-6 max-w-2xl mx-auto">Help others by leaving a review of your experience!</p>
         <a href="#contact" class="inline-block bg-primary text-secondary px-6 py-3 rounded font-bold hover:bg-opacity-90 transition">Leave a Review</a>
     </section>
+    <!-- Reviews Section -->
+<section id="reviews" class="py-20 bg-gray-100">
+    <div class="container mx-auto px-4 max-w-2xl">
+        <h2 class="text-3xl font-bold text-center mb-8" data-aos="fade-up">Leave a Review</h2>
+        <div class="bg-white p-8 rounded-lg shadow-md" data-aos="fade-up">
+            <!-- Star Rating -->
+            <div class="flex justify-center mb-4" id="starContainer">
+                <span data-value="1" class="text-gray-300 text-3xl cursor-pointer">&#9733;</span>
+                <span data-value="2" class="text-gray-300 text-3xl cursor-pointer">&#9733;</span>
+                <span data-value="3" class="text-gray-300 text-3xl cursor-pointer">&#9733;</span>
+                <span data-value="4" class="text-gray-300 text-3xl cursor-pointer">&#9733;</span>
+                <span data-value="5" class="text-gray-300 text-3xl cursor-pointer">&#9733;</span>
+            </div>
+            <!-- Review Text -->
+            <textarea id="reviewText" class="w-full border border-gray-300 rounded p-3 mb-4 resize-none" placeholder="Write your review here..."></textarea>
+            <button id="submitReview" class="w-full bg-primary text-secondary py-3 rounded font-bold hover:bg-opacity-90 transition">Submit Review</button>
+        </div>
+
+        <!-- Display Reviews -->
+        <div id="reviewsContainer" class="mt-12 space-y-6">
+            <h3 class="text-2xl font-bold mb-4">Reviews</h3>
+            <!-- Individual reviews will appear here -->
+        </div>
+    </div>
+</section>
+
+<script>
+    // Star rating logic
+    const stars = document.querySelectorAll('#starContainer span');
+    let selectedRating = 0;
+
+    stars.forEach(star => {
+        star.addEventListener('mouseover', () => {
+            highlightStars(star.dataset.value);
+        });
+        star.addEventListener('mouseout', () => {
+            highlightStars(selectedRating);
+        });
+        star.addEventListener('click', () => {
+            selectedRating = star.dataset.value;
+            highlightStars(selectedRating);
+        });
+    });
+
+    function highlightStars(count) {
+        stars.forEach((star, index) => {
+            if (index < count) {
+                star.classList.remove('text-gray-300');
+                star.classList.add('text-black');
+            } else {
+                star.classList.remove('text-black');
+                star.classList.add('text-gray-300');
+            }
+        });
+    }
+
+    // Submit review
+    document.getElementById('submitReview').addEventListener('click', () => {
+        const reviewText = document.getElementById('reviewText').value.trim();
+        if (selectedRating === 0) {
+            alert('Please select a star rating.');
+            return;
+        }
+        if (reviewText === '') {
+            alert('Please write a comment.');
+            return;
+        }
+        addReview(selectedRating, reviewText);
+
+        // Reset form
+        selectedRating = 0;
+        highlightStars(0);
+        document.getElementById('reviewText').value = '';
+    });
+
+    function addReview(rating, text) {
+        const reviewContainer = document.getElementById('reviewsContainer');
+        const reviewDiv = document.createElement('div');
+        reviewDiv.classList.add('bg-white', 'p-4', 'rounded-lg', 'shadow');
+
+        let starsHtml = '';
+        for (let i = 0; i < rating; i++) starsHtml += '<span class="text-black text-xl">&#9733;</span>';
+        for (let i = rating; i < 5; i++) starsHtml += '<span class="text-gray-300 text-xl">&#9733;</span>';
+
+        reviewDiv.innerHTML = `
+            <div class="flex items-center mb-2">${starsHtml}</div>
+            <p class="text-gray-800">${text}</p>
+        `;
+        reviewContainer.appendChild(reviewDiv);
+    }
+</script>
+
 
     <!-- Footer -->
     <footer class="bg-black text-white py-8">
